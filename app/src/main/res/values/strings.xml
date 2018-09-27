@@ -18,4 +18,5 @@
     <string name="new_item">New</string>
     <string name="sale_format">%d%%</string>
     <string name="price_format">$ %s</string>
+    <string name="title_activity_detail">DetailActivity</string>
 </resources>
