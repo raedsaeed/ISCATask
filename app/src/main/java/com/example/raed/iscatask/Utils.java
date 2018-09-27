@@ -12,11 +12,11 @@ import java.util.List;
 public class Utils {
 
     public static int getImage (String type) {
-        if (type.equals("MEN")) {
+        if (type.equalsIgnoreCase("MEN")) {
             return R.drawable.men;
-        }else if (type.equals("WOMEN")) {
+        }else if (type.equalsIgnoreCase("WOMEN")) {
             return R.drawable.women;
-        }else if (type.equals("KIDS")) {
+        }else if (type.equalsIgnoreCase("KIDS")) {
             return R.drawable.kids;
         }else {
             return -1;

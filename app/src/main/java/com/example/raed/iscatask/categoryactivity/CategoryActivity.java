@@ -1,17 +1,29 @@
 package com.example.raed.iscatask.categoryactivity;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.raed.iscatask.R;
+import com.example.raed.iscatask.data.Category;
+import com.example.raed.iscatask.data.Results;
+import com.example.raed.iscatask.network.AndoraCallBack;
 
-public class CategoryActivity extends AppCompatActivity {
+import java.util.List;
+
+public class CategoryActivity extends AppCompatActivity implements AndoraCallBack.CompletedRequestListener {
+    private static final String TAG = "CategoryActivity";
+
+    SwipeRefreshLayout refreshLayout;
+    AndoraCallBack callBack;
+    CategoryAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,11 +32,24 @@ public class CategoryActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        callBack = AndoraCallBack.getInstance(this);
+        callBack.getData();
+
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(layoutManager);
-        CategoryAdapter categoryAdapter = new CategoryAdapter(this);
-        recyclerView.setAdapter(categoryAdapter);
+        adapter = new CategoryAdapter(this);
+        recyclerView.setAdapter(adapter);
+
+        refreshLayout = findViewById(R.id.refresh_layout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshLayout.setRefreshing(true);
+                callBack.getData();
+            }
+        });
     }
 
     @Override
@@ -48,8 +73,15 @@ public class CategoryActivity extends AppCompatActivity {
             case R.id.action_search:
                 Toast.makeText(this, "Search message", Toast.LENGTH_SHORT).show();
                 return true;
-                default:
-                    return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onCompleteRequest(Results categories) {
+        Log.d(TAG, "onCompleteRequest: " + categories.getResults().size());
+        refreshLayout.setRefreshing(false);
+        adapter.loadData(categories.getResults());
     }
 }

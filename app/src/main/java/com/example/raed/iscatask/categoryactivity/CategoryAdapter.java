@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,9 @@ import android.widget.TextView;
 
 import com.example.raed.iscatask.R;
 import com.example.raed.iscatask.Utils;
+import com.example.raed.iscatask.data.Category;
 import com.example.raed.iscatask.listactivity.ListActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,15 +23,13 @@ import java.util.List;
  */
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
-    private List<String> categories;
+    private static final String TAG = "CategoryAdapter";
+
+    private List<Category> categories;
     private Context context;
 
     public CategoryAdapter (Context context) {
         this.context = context;
-        categories = new ArrayList<>();
-        categories.add(context.getString(R.string.men));
-        categories.add(context.getString(R.string.women));
-        categories.add(context.getString(R.string.kids));
     }
 
     @NonNull
@@ -43,8 +42,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
         if (categories.get(position) !=  null) {
-            int imageId = Utils.getImage(categories.get(position));
-            String type = categories.get(position);
+            Log.d(TAG, "onBindViewHolder: " + categories.get(position).getCategory());
+            int imageId = Utils.getImage(categories.get(position).getCategory());
+            String type = categories.get(position).getCategory();
             holder.catImage.setImageResource(imageId);
             holder.catText.setText(type);
         }
@@ -53,6 +53,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public int getItemCount() {
         return (categories == null) ? 0 : categories.size();
+    }
+
+    public void loadData (List<Category> categories) {
+        this.categories = categories;
+        notifyDataSetChanged();
     }
 
     class CategoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
