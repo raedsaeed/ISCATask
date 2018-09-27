@@ -10,4 +10,12 @@
     <string name="men">MEN</string>
     <string name="women">WOMEN</string>
     <string name="kids">KIDS</string>
+    <string name="title_activity_list">ListActivity</string>
+    <string name="list_image">List Image</string>
+    <string name="add_cart">Add Cart</string>
+    <string name="like">Like</string>
+    <string name="rotate">Rotate</string>
+    <string name="new_item">New</string>
+    <string name="sale_format">%d%%</string>
+    <string name="price_format">$ %s</string>
 </resources>
