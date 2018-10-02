@@ -18,6 +18,8 @@ import com.example.raed.iscatask.listactivity.ListActivity;
 
 import java.util.List;
 
+import static com.example.raed.iscatask.listactivity.ListActivity.EXTRA_CATEGORY_KEY;
+
 /**
  * Created by raed on 9/27/18.
  */
@@ -74,6 +76,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         public void onClick(View v) {
             int position = getAdapterPosition();
             Intent intent = new Intent(context, ListActivity.class);
+            Category category = categories.get(position);
+            intent.putExtra(EXTRA_CATEGORY_KEY, category.getCategory());
             context.startActivity(intent);
         }
     }

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.raed.iscatask.R;
 import com.example.raed.iscatask.data.Item;
+import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
     public static final String EXTRA_ITEM = "com.example.raed.iscatask.EXTRA_ITEM";
@@ -44,10 +45,12 @@ public class DetailActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
         sale = findViewById(R.id.sale);
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            item = intent.getParcelableExtra(EXTRA_ITEM);
-            imageView.setImageResource(item.getImageId());
+        if (savedInstanceState != null) {
+            item = savedInstanceState.getParcelable(SAVED_ITEM);
+            Picasso.with(this)
+                    .load(item.getImage())
+                    .into(imageView);
+
             name.setText(item.getName());
             description.setText(item.getDescription());
             price.setText(String.format(getString(R.string.price_format), String.valueOf(item.getPrice())));
@@ -57,7 +60,31 @@ public class DetailActivity extends AppCompatActivity {
                 sale.setText(String.format(getString(R.string.sale_format), item.getSale()));
                 sale.setTextColor(getColor(R.color.color_accent_dark));
             }
+        } else {
+            Intent intent = getIntent();
+            if (intent != null) {
+                item = intent.getParcelableExtra(EXTRA_ITEM);
+                Picasso.with(this)
+                        .load(item.getImage())
+                        .into(imageView);
+
+                name.setText(item.getName());
+                description.setText(item.getDescription());
+                price.setText(String.format(getString(R.string.price_format), String.valueOf(item.getPrice())));
+                if (item.getSale() == 0) {
+                    sale.setText(R.string.new_item);
+                } else {
+                    sale.setText(String.format(getString(R.string.sale_format), item.getSale()));
+                    sale.setTextColor(getColor(R.color.color_accent_dark));
+                }
+            }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(SAVED_ITEM, item);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -80,6 +107,9 @@ public class DetailActivity extends AppCompatActivity {
                 return true;
             case R.id.action_search:
                 Toast.makeText(this, "Search message", Toast.LENGTH_SHORT).show();
+                return true;
+            case android.R.id.home:
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

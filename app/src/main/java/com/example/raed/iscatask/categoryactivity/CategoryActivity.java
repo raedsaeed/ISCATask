@@ -12,17 +12,14 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.raed.iscatask.R;
-import com.example.raed.iscatask.data.Category;
 import com.example.raed.iscatask.data.Results;
-import com.example.raed.iscatask.network.AndoraCallBack;
+import com.example.raed.iscatask.network.AndoraCategoryCallBack;
 
-import java.util.List;
-
-public class CategoryActivity extends AppCompatActivity implements AndoraCallBack.CompletedRequestListener {
+public class CategoryActivity extends AppCompatActivity implements AndoraCategoryCallBack.CompletedRequestListener {
     private static final String TAG = "CategoryActivity";
 
     SwipeRefreshLayout refreshLayout;
-    AndoraCallBack callBack;
+    AndoraCategoryCallBack callBack;
     CategoryAdapter adapter;
 
     @Override
@@ -32,12 +29,11 @@ public class CategoryActivity extends AppCompatActivity implements AndoraCallBac
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        callBack = AndoraCallBack.getInstance(this);
-        callBack.getData();
+        callBack = AndoraCategoryCallBack.getInstance(this);
+        callBack.getCategoriesFromNetwork();
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new CategoryAdapter(this);
         recyclerView.setAdapter(adapter);
@@ -47,7 +43,7 @@ public class CategoryActivity extends AppCompatActivity implements AndoraCallBac
             @Override
             public void onRefresh() {
                 refreshLayout.setRefreshing(true);
-                callBack.getData();
+                callBack.getCategoriesFromNetwork();
             }
         });
     }

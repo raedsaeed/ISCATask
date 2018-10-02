@@ -17,6 +17,7 @@ import com.example.raed.iscatask.R;
 import com.example.raed.iscatask.Utils;
 import com.example.raed.iscatask.data.Item;
 import com.example.raed.iscatask.detailactivity.DetailActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +31,10 @@ import static com.example.raed.iscatask.detailactivity.DetailActivity.EXTRA_ITEM
 public class ProListAdapter extends RecyclerView.Adapter<ProListAdapter.ProListHolder>{
 
     private Context context;
-    private List<Item> itemList = new ArrayList<>();
+    private List<Item> itemList;
 
     public ProListAdapter (Context context) {
         this.context = context;
-        itemList = Utils.getFakeItems();
     }
 
     @NonNull
@@ -49,7 +49,10 @@ public class ProListAdapter extends RecyclerView.Adapter<ProListAdapter.ProListH
     public void onBindViewHolder(@NonNull ProListHolder holder, int position) {
         Item item = itemList.get(position);
         if (item != null) {
-            holder.image.setImageResource(item.getImageId());
+            Picasso.with(context)
+                    .load(item.getImage())
+                    .into(holder.image);
+
             holder.price.setText(String.format(context.getString(R.string.price_format), String.valueOf(item.getPrice())));
             holder.name.setText(item.getName());
             if (item.getSale() == 0){
@@ -66,6 +69,11 @@ public class ProListAdapter extends RecyclerView.Adapter<ProListAdapter.ProListH
         return (itemList == null) ? 0 : itemList.size();
     }
 
+
+    public void loadList (List<Item> list) {
+        itemList = list;
+        notifyDataSetChanged();
+    }
 
     class ProListHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         CardView cardView;

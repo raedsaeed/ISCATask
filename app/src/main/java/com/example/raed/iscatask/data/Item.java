@@ -8,26 +8,32 @@ import android.os.Parcelable;
  */
 
 public class Item implements Parcelable{
-    private String name;
+    int id;
+    private String product_name;
     private double price;
-    private int imageId;
-    private int sale;
+    private String category;
     private String description;
+    private String image;
+    private int sale;
 
-    public Item(String name, double price, int imageId, String description) {
-        this.name = name;
+    public Item(int id, String product_name, double price, String category, String description, String image) {
+        this.id = id;
+        this.product_name = product_name;
         this.price = price;
-        this.imageId = imageId;
+        this.category = category;
         this.description = description;
+        this.image = image;
         sale = 0;
     }
 
     protected Item(Parcel in) {
-        name = in.readString();
+        id = in.readInt();
+        product_name = in.readString();
         price = in.readDouble();
-        imageId = in.readInt();
-        sale = in.readInt();
+        category = in.readString();
         description = in.readString();
+        image = in.readString();
+        sale = in.readInt();
     }
 
     public static final Creator<Item> CREATOR = new Creator<Item>() {
@@ -42,24 +48,32 @@ public class Item implements Parcelable{
         }
     };
 
+    public int getId () {
+        return id;
+    }
+
     public String getName() {
-        return name;
+        return product_name;
     }
 
     public double getPrice() {
         return price;
     }
 
-    public int getImageId() {
-        return imageId;
-    }
-
-    public int getSale() {
-        return sale;
+    public String getCategory () {
+        return category;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public String getImage () {
+        return image;
+    }
+
+    public int getSale() {
+        return sale;
     }
 
     public void setSale(int sale) {
@@ -73,10 +87,12 @@ public class Item implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
+        dest.writeInt(id);
+        dest.writeString(product_name);
         dest.writeDouble(price);
-        dest.writeInt(imageId);
-        dest.writeInt(sale);
+        dest.writeString(category);
         dest.writeString(description);
+        dest.writeString(image);
+        dest.writeInt(sale);
     }
 }
