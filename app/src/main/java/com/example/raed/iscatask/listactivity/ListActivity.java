@@ -52,13 +52,7 @@ public class ListActivity extends AppCompatActivity implements AndoraProListCall
             @Override
             public void onRefresh() {
                 refreshLayout.setRefreshing(true);
-
-//               new Handler().postDelayed(new Runnable() {
-//                   @Override
-//                   public void run() {
-//                       refreshLayout.setRefreshing(false);
-//                   }
-//               }, 1000L);
+                callback.getListFromNetwork(key);
             }
         });
     }
@@ -90,6 +84,7 @@ public class ListActivity extends AppCompatActivity implements AndoraProListCall
 
     @Override
     public void onSuccessfulRequest(ProList list) {
+        refreshLayout.setRefreshing(false);
         adapter.loadList(list.getResult());
     }
 }
